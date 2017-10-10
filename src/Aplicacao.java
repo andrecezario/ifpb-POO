@@ -53,7 +53,9 @@ public class Aplicacao {
 	
 	public boolean autenticaUsuario(String nome, String senha)throws Exception{
         
-		if(!ifpb.getUsuarios_().containsKey(nome)) throw new Exception("Usuario Inexistente!");
+		if(!ifpb.getUsuarios_().containsKey(nome)){
+      throw new Exception("Usuario Inexistente!");
+    }
         	   	
 		Usuario usuario = ifpb.getUsuarios_().get(nome);
 
@@ -149,8 +151,6 @@ public class Aplicacao {
 					System.out.println(ifpb.buscarLivroAutor(teclado.nextLine()));
 					break;
 
-					
-					
 				case 4:    //Mostrar Livros da Bilioteca
 
 					if(ifpb.getEmprestimos().isEmpty()) System.out.println("Não Existe Emprestimos!");
@@ -162,8 +162,6 @@ public class Aplicacao {
 					}
 					break;
 
-					
-					
 				case 5:   // Login
 
 					if(usuarioLogado!=null){
@@ -175,23 +173,22 @@ public class Aplicacao {
 					String nome = teclado.nextLine();
 					System.out.println("Informe a Senha:");
 					String senha = teclado.nextLine();
-                try{
+          
+          try{
 					
-                	if(autenticaUsuario(nome, senha)){
-						System.out.println("\nUsuario: "+ usuarioLogado.getClass().getSimpleName()+ " - " +nome+ " Logado!");
-						menu = 2;
-					}
-					
-					else System.out.println("Usuario Invalido!");
-					break;
-                
-                }catch(Exception e){
-					System.out.println("--> " + e.getMessage());
-					break;
+            if(autenticaUsuario(nome, senha)){
+  						System.out.println("\nUsuario: "+ usuarioLogado.getClass().getSimpleName()+ " - " +nome+ " Logado!");
+  						menu = 2;
+  					}else System.out.println("Usuario Invalido!");
+            break;      
+          }
+          catch(Exception e){
+					 System.out.println("--> " + e.getMessage());
+					 break;
 				}
                 
                 
-				case 6:    //Logof
+				case 6:    //Logout
 
 					if(usuarioLogado==null){
 						System.out.println("Opção Invalida!");
@@ -322,16 +319,9 @@ public class Aplicacao {
 		System.out.println("\n <-- Até Breve -->");
 	}
 
-
 	public static void main(String[] args) throws Exception {
-
 		Aplicacao aplicacao = new Aplicacao();
 		aplicacao.Executar();
-
-
-
 	}
-
-
 
 }
