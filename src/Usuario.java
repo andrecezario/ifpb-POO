@@ -59,7 +59,8 @@ public abstract class Usuario {
 					+ "\nData para Devolução: " + emprestimo.getDataDevolucao()
 					+  emprestimo.mostrardiaDevolovido()
 					+ "\nMulta: " + emprestimo.getMulta()
-					+ "\nStatus: " + emprestimo.mostrarStatus();	
+					//+ "\nStatus: " + emprestimo.mostrarStatus();	
+					+ "\nStatus: " + emprestimo.getStatus();	
 		}
 
 		return lista;
