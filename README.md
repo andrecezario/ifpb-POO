@@ -17,7 +17,7 @@
 
 ## **Padrões**
 
-**3 - Adapter:** Permite a um objeto alterar seu comportamento quando seu estado interno muda. O objeto parecerá ter mudado de classe.
+**3 - State:** Permite a um objeto alterar seu comportamento quando seu estado interno muda. O objeto parecerá ter mudado de classe.
 
 ## **Classes e Métodos afetados**
 Foi corrigida neste a dinâmica de empréstimos, substituindo a utilizada pelas simples trocas de "Aberto!" para valor booleano "true" e "Devolvido!" para booleano "false" por uma implementação utilizando o padrão de projeto State.
