@@ -25,7 +25,7 @@ public class Biblioteca{
 	
 	public void adicionarUsuario(Usuario usuario)throws Exception{
 		if(usuarios_.values().contains(usuario))
-			throw new Exception("Usuario Já existente!");
+			throw new Exception("Usuario Jï¿½ existente!");
 
 		usuarios_.put(usuario.getNomeUsuario(), usuario);
 	}
@@ -45,7 +45,7 @@ public class Biblioteca{
 	public void adicionarLivro(Livro livro)throws Exception{
 
 		if(livros_.contains(livro))
-			throw new Exception("Erro! Livro já Existente!");
+			throw new Exception("Erro! Livro jï¿½ Existente!");
 
 		livros_.add(livro);
 
@@ -80,7 +80,7 @@ public class Biblioteca{
 				return autor.mostrarLivrosAutor();
 		}
 
-		return("Desculpe! Não existe livros desse autor!");
+		return("Desculpe! Nï¿½o existe livros desse autor!");
 
 	}
 
@@ -130,11 +130,12 @@ public class Biblioteca{
 
 			if(livro.getTituloLivro().equals(titulolivro)){
 
-				if(livro.getQuantidade() == 0)throw new Exception("Não há em Estoque!");
+				if(livro.getQuantidade() == 0)throw new Exception("Nï¿½o hï¿½ em Estoque!");
 
 				for(int i=0;i<usuario.getEmprestimos().size();i++){
-					if(usuario.getEmprestimos().get(i).getLivroEmprestado().equals(livro) && usuario.getEmprestimos().get(i).getStatus())
-						throw new Exception("Você Ja possui o livro solicitado!");
+					//if(usuario.getEmprestimos().get(i).getLivroEmprestado().equals(livro) && usuario.getEmprestimos().get(i).getStatus())
+					if(usuario.getEmprestimos().get(i).getLivroEmprestado().equals(livro) && usuario.getEmprestimos().get(i).getStatus().equals("Aberto!"))
+						throw new Exception("Vocï¿½ Ja possui o livro solicitado!");
 				}
 
 				emprestimo = new Emprestimo(id, livro, formatar.format(dataemprestimo.getTime()), formatar.format(datadevolucao.getTime()), usuario);
@@ -154,7 +155,7 @@ public class Biblioteca{
 
 		}
 
-		if(!existelivro)throw new Exception("Não Existe o Livro informado!");
+		if(!existelivro)throw new Exception("Nï¿½o Existe o Livro informado!");
         //System.out.println("Prazo" + usuario.Prazo());
 		return resultado;
 	}
@@ -166,7 +167,7 @@ public class Biblioteca{
 
 		boolean existelivro = false;
 
-		if(usuario.getEmprestimos().isEmpty()) throw new Exception("Você não possui Emprestimos");
+		if(usuario.getEmprestimos().isEmpty()) throw new Exception("Vocï¿½ nï¿½o possui Emprestimos");
 
 		//Verificar se o usuario possui o livro informado
 		for(int i=0;i<usuario.getEmprestimos().size();i++){
@@ -174,7 +175,7 @@ public class Biblioteca{
 				existelivro = true;
 		}
 
-		if(!existelivro) throw new Exception("Você Não possui o livro informado!");
+		if(!existelivro) throw new Exception("Vocï¿½ Nï¿½o possui o livro informado!");
 
 
 		for(Emprestimo emprestimo: emprestimos_){
@@ -183,23 +184,31 @@ public class Biblioteca{
 
 			if(emprestimo.getLivroEmprestado().getTituloLivro().equals(titulolivro)){
 				//Verificar se o Livro ja foi devolvido 
-				if(!emprestimo.getStatus()) throw new Exception("O livro ja foi devolvido!");				
+				
+				//if(!emprestimo.getStatus()) throw new Exception("O livro ja foi devolvido!");				
 
-
+				if(emprestimo.getStatus().equals("Devolvido!")) throw new Exception("O livro ja foi devolvido!");				
 				//Alterar a quantidade do livro
-				for(Livro livro : livros_){
-					if(livro.getTituloLivro().equals(emprestimo.getLivroEmprestado().getTituloLivro()))
-						livro.setQuantidade(livro.getQuantidade()+1);
-				}
-
-				//Mudar Status do livro na lista do usuario
-				for(int i=0; i< usuario.getEmprestimos().size(); i++){
-					if(usuario.getEmprestimos().get(i).equals(emprestimo))
-						usuario.getEmprestimos().get(i).setStatus(false);
-				}
-
-				emprestimo.setStatus(false);
-
+				
+				else { //
+					for(Livro livro : livros_){
+				
+						if(livro.getTituloLivro().equals(emprestimo.getLivroEmprestado().getTituloLivro()))
+							livro.setQuantidade(livro.getQuantidade()+1);
+					}
+					
+					/*
+					 * Mudaremos o status conforme implementamos com o padrao de projeto state
+					 */
+	
+					//Mudar Status do livro na lista do usuario
+					for(int i=0; i< usuario.getEmprestimos().size(); i++){
+						if(usuario.getEmprestimos().get(i).equals(emprestimo))
+							//usuario.getEmprestimos().get(i).setStatus(false);
+							usuario.getEmprestimos().get(i).devolvido(usuario.getEmprestimos().get(i));
+					}
+				}//
+				emprestimo.devolvido(emprestimo);
 			}
 
 		}
@@ -236,10 +245,11 @@ public class Biblioteca{
 					+ "\nLivro: " + emprestimo.getLivroEmprestado().getTituloLivro()
 					+ "\nNome do Usuario: " + emprestimo.getUsuario().getNomeUsuario()
 					+ "\nData do Emprestimo: " + emprestimo.getDataEmprestimo()
-					+ "\nData para Devolução: " + emprestimo.getDataDevolucao()
+					+ "\nData para Devoluï¿½ï¿½o: " + emprestimo.getDataDevolucao()
 					+  emprestimo.mostrardiaDevolovido()
 					+ "\nMulta: " + emprestimo.getMulta()
-					+ "\nStatus: " + emprestimo.mostrarStatus();
+					//+ "\nStatus: " + emprestimo.mostrarStatus();
+					+ "\nStatus: " + emprestimo.getStatus();
 		}
 
 		return lista;
@@ -311,11 +321,12 @@ public class Biblioteca{
 	public void removerUsuario(String nome)throws Exception{
 
 		if(! usuarios_.containsKey(nome))
-			throw new Exception("Usuario não Existente!");
+			throw new Exception("Usuario nï¿½o Existente!");
 
 		for(Emprestimo emprestimo : usuarios_.get(nome).getEmprestimos()){
-			if(emprestimo.getStatus())
-				throw new Exception("Não foi possivel Deletar Usuario! Verifique os Emprestimos em Aberto!");
+			//if(emprestimo.getStatus())
+			if(emprestimo.getStatus().equals("Aberto!"))
+				throw new Exception("Nï¿½o foi possivel Deletar Usuario! Verifique os Emprestimos em Aberto!");
 		}
 
 		removerEmprestimo(usuarios_.get(nome));	   	
